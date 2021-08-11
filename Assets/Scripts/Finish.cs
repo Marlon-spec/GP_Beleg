@@ -5,15 +5,27 @@ using UnityEngine.SceneManagement;
 
 
 public class Finish : MonoBehaviour
-{
-    [SerializeField] private string sceneName;
+{ 
+     private CharacterController characterController;
 
-    private void OnTriggerEnter2D(Collider2D collision)  //if collison with game Object tagged Player load new Scene called Finish
+    void Start()
+    {
+        characterController = GameObject.Find("Player").GetComponent<CharacterController>();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)  
     {
         if (collision.gameObject.tag == "Player")
         {
-            SceneManager.LoadScene("Finish");
+            PlayerData data = new PlayerData();
+            data = SaveSystem.Instance.LoadPlayer();
+            data.StoreData(characterController.coins, characterController.secondsLeft);
+            SaveSystem.Instance.SavePlayer(data);
 
+
+            PlayerPrefs.SetInt("coins", characterController.coins);
+            PlayerPrefs.SetFloat("time", characterController.secondsLeft);
+            SceneManager.LoadScene("Finish");
         }
     }
 

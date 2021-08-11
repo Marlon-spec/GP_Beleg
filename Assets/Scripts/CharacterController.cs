@@ -17,9 +17,9 @@ public class CharacterController : MonoBehaviour
 	[SerializeField] private Collider2D m_CrouchDisableCollider;                // A collider that will be disabled when crouching
 	[SerializeField] public int coins = 0;
 	[SerializeField] private Text coinText;
-	[SerializeField]  public float secondsLeft = 60;
-	[SerializeField]  public Text timerText;
-	
+	[SerializeField] public float secondsLeft = 60;
+	[SerializeField] public Text timerText;
+
 
 
 	const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
@@ -153,58 +153,45 @@ public class CharacterController : MonoBehaviour
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
-    {
-		if(collision.tag == "Collectible")
-        {
+	{
+		if (collision.tag == "Collectible")
+		{
 			Destroy(collision.gameObject);
 			coins += 1;
 			coinText.text = coins.ToString();  //converting the number to a String
-        }
-    }
+		}
+	}
 
 	void Start()
 	{
-	  timerText.GetComponent<Text>().text = "00:" + secondsLeft;
+		timerText.GetComponent<Text>().text = "00:" + secondsLeft;
 	}
 
 	void Update()
 	{
-		if( secondsLeft > 0)
-        {
+		if (secondsLeft > 0)
+		{
 			secondsLeft -= Time.deltaTime;
-        }
+		}
 		else
-        {
+		{
 			secondsLeft = 0;
-        }
+		}
 
 		displayTime(secondsLeft);
-		
+
 	}
 
 	void displayTime(float timetoDisplay)
-    {
-		if(timetoDisplay < 0)
-        {
+	{
+		if (timetoDisplay < 0)
+		{
 			timetoDisplay = 0;
-        }
+		}
 		float minutes = Mathf.FloorToInt(timetoDisplay / 60);
 		float seconds = Mathf.FloorToInt(timetoDisplay % 60);
 
 		timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-    }
-
-	public void SavePlayer ()
-    {
-		SaveSystem.SavePlayer(this);
-    }
-
-	public void LoadPlayer ()
-    {
-		PlayerData data = SaveSystem.LoadPlayer();
-
-		coins = data.coins;
-		secondsLeft = data.secondsLeft;
 	}
 
 }

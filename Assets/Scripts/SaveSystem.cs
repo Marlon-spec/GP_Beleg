@@ -2,21 +2,36 @@ using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-public static class SaveSystem {
+public class SaveSystem : MonoBehaviour 
+{
+    public static SaveSystem Instance;
+    public PlayerData Rudi;
 
-    public static void SavePlayer (CharacterController player)
+    void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        } 
+        else
+        {
+            Destroy(this);
+        }
+     
+    }
+
+    public void SavePlayer (PlayerData player)
     {
         BinaryFormatter formatter = new BinaryFormatter();
         string path = Application.persistentDataPath + "/player.save";
         FileStream stream = new FileStream(path, FileMode.Create);
 
-        PlayerData data = new PlayerData(player);
-
-        formatter.Serialize(stream, data);
+        formatter.Serialize(stream, player);
         stream.Close();
     }
    
-    public static PlayerData LoadPlayer()
+    public PlayerData LoadPlayer()
     {
         string path = Application.persistentDataPath + "/player.save";
         if(File.Exists(path))
@@ -31,8 +46,7 @@ public static class SaveSystem {
         }
         else
         {
-            Debug.LogError("Save file not found in" + path);
-                return null;
+                return new PlayerData();
         }
 
 

@@ -6,12 +6,21 @@ using UnityEngine.SceneManagement;
 
 public class Death : MonoBehaviour
 {
+     private CharacterController characterController;
 
-    private void OnTriggerEnter2D(Collider2D collision)  // if player touches one of those 2D Colliders he will die 
+    void Start()
+    {
+        characterController = GameObject.Find("Player").GetComponent<CharacterController>();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)  
     {
         if(collision.gameObject.tag == "Player")  
         {
-            SceneManager.LoadScene("Game Over"); // Load the Game Over Scene for the Player
+            PlayerPrefs.SetInt("coins", characterController.coins);
+            PlayerPrefs.SetFloat("time", characterController.secondsLeft);
+
+            SceneManager.LoadScene("Game Over"); 
 
         }
     }
